@@ -15,11 +15,28 @@
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
+}
+Person.prototype.eat = function(edible){
+  if(this.stomach.length < 10){
+    this.stomach.push(edible);
+  } 
+};
+Person.prototype.poop = function (){
+  this.stomach = [];
+}
+Person.prototype.toString = function(){
+  return `${this.name}, ${this.age}`;
 }
 
-
+const branden = new Person('Branden', 30);
+console.log(branden.toString());
+branden.eat('pizza');
+console.log(branden.stomach);
+branden.poop();
 /*
   TASK 2
     - Write a Car constructor that initializes `model` and `milesPerGallon` from arguments.
@@ -36,10 +53,33 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, mpg) {
+  this.model = model;
+  this.milesPerGallon = mpg;
+  this.tank = 0;
+  this.odometer = 0;
 }
-
+Car.prototype.fill = function(gallons){
+  this.tank = this.tank + gallons;
+};
+Car.prototype.drive = function(distance){
+  const driveableMiles = this.tank * this.milesPerGallon;
+  console.log('How far can i go bro?', driveableMiles);
+  if(distance <= driveableMiles){
+    this.tank = this.tank - (distance / this.milesPerGallon);
+    this.odometer = this.odometer + distance;
+  } else{
+    this.odometer = this.odometer + driveableMiles;
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles!`
+  }
+}
+// const mazda = new Car('Miata', 41);
+// // console.log(mazda);
+// mazda.fill(15);
+// console.log(mazda.fill(15));
+// mazda.drive(700);
+// console.log(mazda.drive(700));
 
 /*
   TASK 3
@@ -49,18 +89,26 @@ function Car() {
         + Should return a string "Playing with x", x being the favorite toy.
 */
 
-function Baby() {
-
+function Baby(name,age,favoriteToy) {
+Person.call(this, name, age);
+this.favoriteToy = favoriteToy;
 }
-
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play = function(){
+  return `Playing with ${this.favoriteToy}!`;
+}
+const anna = new Baby('Anna', '1 Month', 'Rattle Snakes');
+anna.play();
+console.log(anna);
+console.log(anna.play());
 
 /* 
   TASK 4
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Window Binding - when none of the other bindings apply... this will return in the browser windo
+  2. implicit Binding - left of the dot is when functions are initialized with objects
+  3. new bindings - when a function is created this points to the newly created object...
+  4. explicit - .call or .apply or .bind ( pass arguments one by one and it initialized immediately... passes arguments through an array and (also?) immediately invokes the functions.... pass arguments one by one, but it does not initialize the functions immediately, rather can be used later.)
 */
 
 ///////// END OF CHALLENGE /////////
